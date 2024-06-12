@@ -18,32 +18,40 @@ interface ProductsTableProps {
   title: string;
   description: string;
   price: number;
-  image: string;
+  mainImage?: string;
   onDelete: (id: number) => void;
 }
 
 export const ProductsTable = ({
   id,
   description,
-  image,
+  mainImage,
   price,
   title,
   onDelete,
 }: ProductsTableProps) => {
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const baseURL = "http://127.0.0.1:8000/storage/";
-  const imageUrl = image.startsWith("http") ? image : `${baseURL}${image}`;
+  const adjustedImage = mainImage
+    ? mainImage.replace(/\\/g, "/")
+    : "placeholder.png";
+  const imageUrl = mainImage ? adjustedImage : "/images/placeholder.png";
+  console.log("Final image URL:", imageUrl);
 
   const handleDelete = async () => {
-    const response = await fetch(`http://127.0.0.1:8000/api/produtos/${id}`, {
-      method: "DELETE",
-    });
+    try {
+      const response = await fetch(`/api/products/${id}`, {
+        method: "DELETE",
+      });
 
-    if (response.ok) {
-      onDelete(id);
-      setIsDialogOpen(false);
-    } else {
-      console.error("Erro ao deletar o produto");
+      if (response.ok) {
+        onDelete(id);
+        setIsDialogOpen(false);
+      } else {
+        console.error("Erro ao deletar o produto");
+      }
+    } catch (error) {
+      console.error("Erro ao deletar o produto:", error);
     }
   };
 

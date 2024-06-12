@@ -27,20 +27,20 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { DashboardHeader } from "./_components/dashboard-header";
-import { ProductsTableSkeleton } from "./_components/products-table-skeleton"; 
+import { ProductsTableSkeleton } from "./_components/products-table-skeleton";
 
 export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [data, setData] = useState<Product[] | null>(null);
-
+  const [products, setProducts] = useState<Product[]>([]);
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("http://localhost:8000/api/produtos");
-      const result = await res.json();
-      setData(result);
+    const fetchProducts = async () => {
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      console.log(data);
+      setProducts(data);
     };
 
-    fetchData();
+    fetchProducts();
   }, []);
 
   const handleOpenModal = () => {
@@ -132,17 +132,17 @@ export default function Dashboard() {
                   </TableRow>
                 </TableHeader>
                 <Suspense fallback={<ProductsTableSkeleton />}>
-                  {data ? (
-                    data.map(product => (
+                  {products ? (
+                    products.map(product => (
                       <ProductsTable
                         key={product.id}
                         title={product.title}
                         description={product.description}
                         price={product.price}
-                        image={product.image}
+                        mainImage={product.image}
                         id={product.id}
                         onDelete={id => {
-                          setData(data.filter(item => item.id !== id));
+                          setProducts(products.filter(item => item.id !== id));
                         }}
                       />
                     ))

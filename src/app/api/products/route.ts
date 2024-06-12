@@ -99,3 +99,12 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
+export async function GET(req: Request) {
+  const products = await prisma.product.findMany({
+    include: { images: true },
+  });
+
+  return NextResponse.json(products);
+}

@@ -22,8 +22,8 @@ interface FormCreateProductsProps {
 const generateSlug = (title: string) => {
   return title
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-") 
-    .replace(/^-+|-+$/g, ""); 
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 };
 
 const onSubmit = async (data: zod.infer<typeof CreatedProduct>) => {
